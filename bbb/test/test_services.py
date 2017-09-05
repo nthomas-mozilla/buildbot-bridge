@@ -722,7 +722,7 @@ SELECT * FROM buildsets;"""))
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0},
+                {"runId": 0, "scheduled": 10},
             ],
         }}
 
@@ -804,7 +804,7 @@ SELECT * FROM buildsets;"""))
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0},
+                {"runId": 0, "scheduled": 10},
             ],
         }}
 
@@ -876,7 +876,7 @@ SELECT * FROM buildsets;"""))
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0},
+                {"runId": 0, "scheduled": 10},
             ],
         }}
 
@@ -902,7 +902,7 @@ SELECT * FROM buildsets;"""))
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0},
+                {"runId": 0, "scheduled": 10},
             ],
         }}
 
@@ -1165,7 +1165,7 @@ INSERT INTO buildrequests
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0},
+                {"runId": 0, "scheduled": 10},
             ],
         }}
 
@@ -1200,7 +1200,7 @@ def test_integrity_error(fake_now, caplog):
     data = {"status": {
         "taskId": taskid,
         "runs": [
-            {"runId": 1},
+            {"runId": 1, "scheduled": 10},
         ],
     }}
     tclistener = TCListener(
