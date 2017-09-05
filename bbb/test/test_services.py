@@ -667,7 +667,7 @@ class TestTCListener(unittest.TestCase):
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0},
+                {"runId": 0, "scheduled": 10},
             ],
         }}
 
@@ -700,6 +700,7 @@ class TestTCListener(unittest.TestCase):
         self.assertEqual(buildrequests[0].id, 1)
         self.assertEqual(buildrequests[0].buildername, "builder good name")
         self.assertEqual(buildrequests[0].priority, 0)
+        self.assertEqual(buildrequests[0].submitted_at, 10)
         properties = self.tclistener.buildbot_db.buildset_properties_table.select().execute().fetchall()
         self.assertItemsEqual(properties, [
             (1, u"taskId", u'["{}", "bbb"]'.format(taskid)),
@@ -713,6 +714,7 @@ SELECT * FROM buildsets;"""))
         for row in bb_state:
             reason = row[2][0:-len(taskid)]
             self.assertEqual(reason, u'Created by BBB for task ')
+            self.assertEqual(row['submitted_at'], 10)
 
     @patch("arrow.now")
     def testHandlePendingNotAuthorizedRestrictedBuilder(self, fake_now):
@@ -752,7 +754,7 @@ SELECT * FROM buildsets;"""))
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0},
+                {"runId": 0, "scheduled": 10},
             ],
         }}
 
@@ -786,6 +788,7 @@ SELECT * FROM buildsets;"""))
         self.assertEqual(buildrequests[0].id, 1)
         self.assertEqual(buildrequests[0].buildername, "i'm a good builder")
         self.assertEqual(buildrequests[0].priority, 1)
+        self.assertEqual(buildrequests[0].submitted_at, 10)
         properties = self.tclistener.buildbot_db.buildset_properties_table.select().execute().fetchall()
         self.assertItemsEqual(properties, [
             (1, u"taskId", u'["{}", "bbb"]'.format(taskid)),
@@ -838,8 +841,8 @@ SELECT * FROM buildsets;"""))
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0},
-                {"runId": 1},
+                {"runId": 0, "scheduled": 10},
+                {"runId": 1, "scheduled": 30},
             ],
         }}
         self.tclistener.tc_queue.task.return_value = {
@@ -865,6 +868,8 @@ SELECT * FROM buildsets;"""))
         self.assertEqual(bbb_state[0].createdDate, 23)
         self.assertEqual(bbb_state[0].processedDate, 34)
         self.assertEqual(bbb_state[0].takenUntil, None)
+        # TODO: verify buildrequest/buildsets have correct submitted_at here ?
+        # what is the desired behaviour anyway ?
 
     def testHandlePendingIgnoredBuilder(self):
         taskid = makeTaskId()
