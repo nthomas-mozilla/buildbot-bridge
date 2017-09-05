@@ -868,8 +868,8 @@ SELECT * FROM buildsets;"""))
         self.assertEqual(bbb_state[0].createdDate, 23)
         self.assertEqual(bbb_state[0].processedDate, 34)
         self.assertEqual(bbb_state[0].takenUntil, None)
-        # TODO: verify buildrequest/buildsets have correct submitted_at here ?
-        # what is the desired behaviour anyway ?
+        # we don't update the buildbot db for reruns, so submitted_at is unchanged and we
+        # don't attempt to test that here
 
     def testHandlePendingIgnoredBuilder(self):
         taskid = makeTaskId()
