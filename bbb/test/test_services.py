@@ -667,7 +667,7 @@ class TestTCListener(unittest.TestCase):
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0, "scheduled": 10},
+                {"runId": 0, "scheduled": 60},
             ],
         }}
 
@@ -700,7 +700,7 @@ class TestTCListener(unittest.TestCase):
         self.assertEqual(buildrequests[0].id, 1)
         self.assertEqual(buildrequests[0].buildername, "builder good name")
         self.assertEqual(buildrequests[0].priority, 0)
-        self.assertEqual(buildrequests[0].submitted_at, 10)
+        self.assertEqual(buildrequests[0].submitted_at, 60)
         properties = self.tclistener.buildbot_db.buildset_properties_table.select().execute().fetchall()
         self.assertItemsEqual(properties, [
             (1, u"taskId", u'["{}", "bbb"]'.format(taskid)),
@@ -714,7 +714,7 @@ SELECT * FROM buildsets;"""))
         for row in bb_state:
             reason = row[2][0:-len(taskid)]
             self.assertEqual(reason, u'Created by BBB for task ')
-            self.assertEqual(row['submitted_at'], 10)
+            self.assertEqual(row['submitted_at'], 60)
 
     @patch("arrow.now")
     def testHandlePendingNotAuthorizedRestrictedBuilder(self, fake_now):
@@ -722,7 +722,7 @@ SELECT * FROM buildsets;"""))
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0, "scheduled": 10},
+                {"runId": 0, "scheduled": 60},
             ],
         }}
 
@@ -754,7 +754,7 @@ SELECT * FROM buildsets;"""))
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0, "scheduled": 10},
+                {"runId": 0, "scheduled": 60},
             ],
         }}
 
@@ -788,7 +788,7 @@ SELECT * FROM buildsets;"""))
         self.assertEqual(buildrequests[0].id, 1)
         self.assertEqual(buildrequests[0].buildername, "i'm a good builder")
         self.assertEqual(buildrequests[0].priority, 1)
-        self.assertEqual(buildrequests[0].submitted_at, 10)
+        self.assertEqual(buildrequests[0].submitted_at, 60)
         properties = self.tclistener.buildbot_db.buildset_properties_table.select().execute().fetchall()
         self.assertItemsEqual(properties, [
             (1, u"taskId", u'["{}", "bbb"]'.format(taskid)),
@@ -804,7 +804,7 @@ SELECT * FROM buildsets;"""))
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0, "scheduled": 10},
+                {"runId": 0, "scheduled": 60},
             ],
         }}
 
@@ -841,8 +841,8 @@ SELECT * FROM buildsets;"""))
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0, "scheduled": 10},
-                {"runId": 1, "scheduled": 30},
+                {"runId": 0, "scheduled": 60},
+                {"runId": 1, "scheduled": 100},
             ],
         }}
         self.tclistener.tc_queue.task.return_value = {
@@ -876,7 +876,7 @@ SELECT * FROM buildsets;"""))
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0, "scheduled": 10},
+                {"runId": 0, "scheduled": 60},
             ],
         }}
 
@@ -902,7 +902,7 @@ SELECT * FROM buildsets;"""))
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0, "scheduled": 10},
+                {"runId": 0, "scheduled": 60},
             ],
         }}
 
@@ -1165,7 +1165,7 @@ INSERT INTO buildrequests
         data = {"status": {
             "taskId": taskid,
             "runs": [
-                {"runId": 0, "scheduled": 10},
+                {"runId": 0, "scheduled": 60},
             ],
         }}
 
@@ -1200,7 +1200,7 @@ def test_integrity_error(fake_now, caplog):
     data = {"status": {
         "taskId": taskid,
         "runs": [
-            {"runId": 1, "scheduled": 10},
+            {"runId": 1, "scheduled": 60},
         ],
     }}
     tclistener = TCListener(
